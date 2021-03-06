@@ -39,4 +39,32 @@ class Router
 
         return call_user_func($callback);
     }
+
+    private function renderView($view)
+    {
+        $layoutContents = $this->layoutContent();
+        $viewContent = $this->renderOnlyView($view);
+
+        return str_replace('{{ content }}', $viewContent, $layoutContents);
+
+        require_once Application::$rootDirectory . "/views/$view.php";
+    }
+
+    protected function layoutContent()
+    {
+        ob_start();
+
+        require_once Application::$rootDirectory . "/views/layouts/main.php";
+
+        return ob_get_clean();
+    }
+
+    protected function renderOnlyView($view)
+    {
+        ob_start();
+
+        require_once Application::$rootDirectory . "/views/$view.php";
+
+        return ob_get_clean();
+    }
 }
