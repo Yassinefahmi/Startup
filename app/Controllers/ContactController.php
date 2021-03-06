@@ -5,6 +5,7 @@ namespace App\Controllers;
 
 
 use App\General\Controller;
+use App\General\Request;
 
 class ContactController extends Controller
 {
@@ -17,8 +18,10 @@ class ContactController extends Controller
         return $this->render('contact', $params);
     }
 
-    public function store(): string
+    public function store(Request $request): string
     {
+        $body = $request->getBody();
+
         return 'Handling submitted data';
     }
 }
