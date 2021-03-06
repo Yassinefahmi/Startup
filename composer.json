@@ -1,7 +1,7 @@
 {
-    "name": "yassinefahmi/rbac",
+    "name": "yassinefahmi/startup",
     "type": "project",
-    "description": "This project provides a RBAC (Role-Based-Access-Control) for your application.",
+    "description": "A starters MVC framework for your application.",
     "license": "MIT",
     "authors": [
         {
