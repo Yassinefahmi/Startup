@@ -22,6 +22,11 @@ class Router
         $this->routes['get'][$path] = $callback;
     }
 
+    public function post($path, $callback): void
+    {
+        $this->routes['post'][$path] = $callback;
+    }
+
     public function resolve()
     {
         $path = $this->request->getPath();
@@ -30,7 +35,7 @@ class Router
 
         if ($callback === false) {
             $this->response->setStatus(404);
-            return "This view can not be found.";
+            return $this->renderView('responses/404');
         }
 
         if (is_string($callback)) {
@@ -44,7 +49,6 @@ class Router
         return call_user_func($callback);
     }
 
-    private function renderView($view)
     public function renderView($view, $params = []): array|string
     {
         $layoutContents = $this->layoutContent();
