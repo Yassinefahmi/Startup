@@ -37,32 +37,44 @@ class Router
             return $this->renderView($callback);
         }
 
+        if (is_array($callback)) {
+            $callback[0] = new $callback[0]();
+        }
+
         return call_user_func($callback);
     }
 
     private function renderView($view)
+    public function renderView($view, $params = []): array|string
     {
         $layoutContents = $this->layoutContent();
-        $viewContent = $this->renderOnlyView($view);
+        $viewContent = $this->renderOnlyView($view, $params);
 
         return str_replace('{{ content }}', $viewContent, $layoutContents);
-
-        require_once Application::$rootDirectory . "/views/$view.php";
     }
 
-    protected function layoutContent()
+    private function renderContent($viewContent): array|bool|string
+    {
+        $layoutContents = $this->layoutContent();
+
+        return str_replace('{{ content }}', $viewContent, $layoutContents);
+    }
+
+    protected function layoutContent(): bool|string
     {
         ob_start();
-
         require_once Application::$rootDirectory . "/views/layouts/main.php";
 
         return ob_get_clean();
     }
 
-    protected function renderOnlyView($view)
+    protected function renderOnlyView($view, $params): bool|string
     {
-        ob_start();
+        foreach ($params as $key => $value) {
+            $$key = $value;
+        }
 
+        ob_start();
         require_once Application::$rootDirectory . "/views/$view.php";
 
         return ob_get_clean();
