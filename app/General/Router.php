@@ -30,7 +30,7 @@ class Router
     public function resolve()
     {
         $path = $this->request->getPath();
-        $method = $this->request->getMethod();
+        $method = $this->request->method();
         $callback = $this->routes[$method][$path] ?? false;
 
         if ($callback === false) {
@@ -44,6 +44,7 @@ class Router
 
         if (is_array($callback)) {
             $callback[0] = new $callback[0]();
+            Application::$app->setController($callback[0]);
         }
 
         return call_user_func($callback, $this->request);
@@ -66,8 +67,13 @@ class Router
 
     protected function layoutContent(): bool|string
     {
+        $layout = Application::$app->getController()->layout;
+
         ob_start();
-        require_once Application::$rootDirectory . "/views/layouts/main.php";
+
+        if ($layout !== null) {
+            require_once Application::$rootDirectory . "/views/layouts/$layout.php";
+        }
 
         return ob_get_clean();
     }
