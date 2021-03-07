@@ -17,32 +17,27 @@ class Request
         return substr($path, 0, $position);
     }
 
-    public function method(): string
+    public function getMethod(): string
     {
         return strtolower($_SERVER['REQUEST_METHOD']);
     }
 
-    public function isGet(): bool
+    public function isMethod(string $method): bool
     {
-        return $this->method() === 'get';
-    }
-
-    public function isPost(): bool
-    {
-        return $this->method() === 'post';
+        return $this->getMethod() === $method;
     }
 
     public function getBody(): array
     {
         $body = [];
 
-        if ($this->method() === 'get') {
+        if ($this->isMethod('get')) {
             foreach ($_GET as $key => $value) {
                 $body[$key] = filter_input(INPUT_GET, $key, FILTER_SANITIZE_SPECIAL_CHARS);
             }
         }
 
-        if ($this->method() === 'post') {
+        if ($this->isMethod('post')) {
             foreach ($_POST as $key => $value) {
                 $body[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_SPECIAL_CHARS);
             }
