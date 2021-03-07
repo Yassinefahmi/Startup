@@ -13,7 +13,7 @@ $app->router->get('/home', function () {
 });
 ```
 
-#### Or attach a router to a controller and method.
+#### Or attach a route to a controller and method.
 ```php
 $app->router->get('/example', [\App\Controllers\ExampleController::class, 'index']);
 ```
@@ -25,7 +25,7 @@ $app->router->post('/example', [\App\Controllers\ExampleController::class, 'stor
 ### Create a controller
 The controllers can be found under directory `app/Controllers`. The authentication controllers are included as default 
 and can be adjusted. The controllers are always an expanding of class `app/General/Controller.php`.
-If you want to return a view from the method, you can use the function `view()` that accepts a path and parameters 
+If you want to return a view from the method, you can use the function `view()` from the object that accepts a path and parameters 
 which is by default an empty array.
 
 #### Make method index return view `home.php`:
@@ -35,7 +35,7 @@ public function index(): array|string
     return $this->view('home');
 }
 ```
-#### If the view is located in a directory inside `view`, use a forward slash:
+#### If the view is located in a directory inside `view`, just use a forward slash:
 ```php
 return $this->view('directory/home');
 ```
