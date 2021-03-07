@@ -1,8 +1,10 @@
 <?php
 
 
-namespace App\General;
+namespace App\Controllers;
 
+
+use App\General\Application;
 
 class Controller
 {

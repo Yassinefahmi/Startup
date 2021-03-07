@@ -5,6 +5,8 @@ namespace App\General;
 
 
 
+use App\Controllers\Controller;
+
 class Application
 {
     public static string $rootDirectory;
@@ -34,6 +36,11 @@ class Application
     public function getController(): Controller
     {
         return $this->controller;
+    }
+
+    public function issetController(): bool
+    {
+        return isset($this->controller);
     }
 
     public function run(): void
