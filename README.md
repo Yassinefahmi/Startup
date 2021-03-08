@@ -107,6 +107,48 @@ if ($validated === false) {
 }
 ```
 
+### Migrations
+If you want to create tables into your database, you can use the migration functionality.
+Only one migration needs to be created for a table, you can add this file in path `database/migrations`.
+The file name must start with the letter m, then you describe the range and action that this migration will perform.
+So your migrations should look like this `m0001_create_first_table` -> `m0002_create_second_table` etc.
+
+#### Let's migrate the users table
+```php
+class m0001_create_users_table
+{
+
+    public function up()
+    {
+        \App\General\Application::$app->getDatabase()->getConnection()->exec("
+            CREATE TABLE users (
+                id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                firstname VARCHAR(30) NOT NULL,
+                lastname VARCHAR(30) NOT NULL,
+                email VARCHAR(50),
+                reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            )
+        ");
+    }
+
+    public function down()
+    {
+
+    }
+}
+```
+
+#### Let's migrate with the PHP command
+```bash
+$ php migration
+
+[08-03-2021 21:13:57] - Applying migration m0001_create_users_table.php
+[08-03-2021 21:13:57] - Applied migration m0001_create_users_table.php
+```
+
+And there we go, all migrations should be applied. If there are any errors, check your database credentials in the
+`.env` file.
+
 ## Security
 
 If you discover any security related issues, please create an issue.
