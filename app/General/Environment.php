@@ -20,6 +20,9 @@ class Environment
         $this->environmentVariables = $_ENV;
     }
 
+    /**
+     * @return array
+     */
     public function getDatabaseEnvironmentVariables(): array
     {
         return [
