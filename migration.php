@@ -5,4 +5,4 @@ use App\General\Application;
 
 $app = new Application((__DIR__));
 
-$app->getDatabase()->applyMigrations();
+$app->getMigration()->applyMigrations();
