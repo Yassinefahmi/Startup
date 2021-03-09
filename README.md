@@ -123,18 +123,14 @@ class m0001_create_users_table
         \App\General\Application::$app->getDatabase()->getConnection()->exec("
             CREATE TABLE users (
                 id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-                firstname VARCHAR(30) NOT NULL,
-                lastname VARCHAR(30) NOT NULL,
-                email VARCHAR(50),
+                username VARCHAR(30) NOT NULL,
+                password VARCHAR(255) NOT NULL,
                 reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
             )
         ");
     }
 
-    public function down()
-    {
-
-    }
+    public function down() {}
 }
 ```
 
@@ -174,7 +170,7 @@ class User extends Model
 }
 ````
 #### Now we can use the model for writing data to the table.
-In the controller we first want to create an instance to the User model. 
+In the controller we first want to create an instance of the User model. 
 This instance represents a user that we want to write to the database.
 
 We can do this by using function `registerColumn()`:
