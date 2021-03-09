@@ -149,6 +149,56 @@ $ php migration
 And there we go, all migrations should be applied. If there are any errors, check your database credentials in the
 `.env` file.
 
+### Models
+As soon as we want to create users in the database, we need to create a User model that can do this for us. 
+A model represents a table in the database. It is able to save data safely.
+
+#### Let's create a User model in directory `app/Models`
+A created model must inherit class Model. Each model has two functions, tableName and attributes. 
+In the function `tableName()` we return the table name. The function `attributes()` returns an array of columns which
+needs to be filled with data.
+````php
+class User extends Model
+{
+    public function tableName(): string
+    {
+        return 'users';
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'username', 'password'
+        ];
+    }
+}
+````
+#### Now we can use the model for writing data to the table.
+In the controller we first want to create an instance to the User model. 
+This instance represents a user that we want to write to the database.
+
+We can do this by using function `registerColumn()`:
+```php 
+$user = new User();
+$user->registerColumn('username', $request->input('username'));
+$user->registerColumn('username', $request->input('password'));
+$user->save()  
+```
+
+Or by using the function `registerColumns()`:
+```php 
+$user = new User();
+$user->registerColumns([
+    'username' => $request->input('username'),
+    'password' => $request->input('password')
+]);
+$user->save()
+```
+#### The helper function `make()` from class `Helpers/Hash` allows us to encrypt passwords.
+```php
+'password' => Hash::make($request->input('password'));
+```
+
 ## Security
 
 If you discover any security related issues, please create an issue.
