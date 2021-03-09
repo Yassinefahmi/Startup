@@ -6,6 +6,8 @@ namespace App\Controllers\Auth;
 
 use App\Controllers\Controller;
 use App\General\Request;
+use App\Helpers\Hash;
+use App\Models\User;
 
 class RegisterController extends Controller
 {
@@ -16,13 +18,22 @@ class RegisterController extends Controller
 
     public function store(Request $request): array|string
     {
-        $request->validate([
+        $validated = $request->validate([
             'username' => ['required', 'string', 'min:3'],
-            'password' => ['required', 'string', 'confirmed']
+            'password' => ['required', 'string', 'min:6', 'confirmed']
         ]);
 
-        var_dump($request->getErrors());
+        if ($validated === false) {
+            return $this->view('auth/register', $request->getErrors());
+        }
 
-        return $this->view('auth/register');
+        $user = new User();
+        $user->registerColumns([
+            'username' => $request->input('username'),
+            'password' => Hash::make($request->input('password'))
+        ]);
+        $user->save();
+
+        return $this->view('auth/login');
     }
 }
