@@ -31,6 +31,8 @@
 </nav>
 
 <div class="container">
+    <?php require_once 'flash_messages.php' ?>
+
     {{ content }}
 </div>
 

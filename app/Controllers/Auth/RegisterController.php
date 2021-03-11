@@ -5,6 +5,7 @@ namespace App\Controllers\Auth;
 
 
 use App\Controllers\Controller;
+use App\General\Application;
 use App\General\Request;
 use App\Helpers\Hash;
 use App\Models\User;
@@ -33,6 +34,8 @@ class RegisterController extends Controller
             'password' => Hash::make($request->input('password'))
         ]);
         $user->save();
+
+        Application::$app->getSession()->setFlashMessage('success', 'The user has successfully been registered');
 
         return $this->view('auth/login');
     }

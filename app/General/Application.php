@@ -15,6 +15,7 @@ class Application
     public Request $request;
     public Response $response;
     public static Application $app;
+    private Session $session;
     private Database $database;
     private Migration $migration;
     private Controller $controller;
@@ -28,9 +29,14 @@ class Application
         $this->request = new Request();
         $this->response = new Response();
         $this->router = new Router($this->request, $this->response);
-
+        $this->session = new Session();
         $this->database = new Database();
         $this->migration = new Migration($this->database);
+    }
+
+    public function getSession(): Session
+    {
+        return $this->session;
     }
 
     public function getDatabase(): Database
