@@ -23,12 +23,12 @@ $app->router->post('/example', [\App\Controllers\ExampleController::class, 'stor
 ```
 
 ### Create a controller
-The controllers can be found under directory `app/Controllers`. The authentication controllers are included as default 
-and can be adjusted. The controllers are always an expanding of class `app/General/Controller.php`.
-If you want to return a view from the method, you can use the function `view()` from the object that accepts a path and parameters 
+The controllers can be found in directory `app/Controllers`. The authentication controllers are included as default 
+and can be adjusted anytime. The controllers should always extend class `app/General/Controller.php`.
+If you want to return a view from a method, you can use the function `view()` from the object that accepts a path and parameters 
 which is by default an empty array.
 
-#### Make method index return view `home.php`:
+#### Load view `home.php`:
 ```php
 public function index(): array|string
 {
@@ -39,7 +39,7 @@ public function index(): array|string
 ```php
 return $this->view('directory/home');
 ```
-#### Sending parameters into the view:
+#### Passing parameters into the view:
 ```php
 $params = [
     'foo' => 'bar',
@@ -59,15 +59,14 @@ echo $foo . ' ' . $params[1];
 ```
 
 ### Create a view
-The views can be found under directory `views`. This directory has standard a `layouts/main.php` file that must be used as default layout for the application.
+The views can be found in directory `views`. This directory has by default a file `layouts/main.php` layout.
 You can create a new default layout or rename the current one. The default layout holds the `{{ content }}` placeholder. 
 This placeholder will automatically be replaced with the given view in the controller.
 
 ### Validation
 The request also provides a validation process. The validate function accepts an array of attributes and rules. 
 
-We currently support a number of validation rules, which will be expanded in the future. 
-
+I currently support a number of validation rules, which will be expanded in the future. 
 ```
 'required': Checks whether the attribute is not null, empty as string or array, 
 'string': Checks whether the attribute is from type string,
@@ -81,7 +80,6 @@ We currently support a number of validation rules, which will be expanded in the
 Feel free to add more in file `app/Traits/Validations.php`.
 
 #### In our `RegisterController` we want to validate if the username has more than 3 characters and whether the password confirmation are matching.
-Be aware! Values processed from a form are always a string.
 ```php
 public function store(Request $request): array|string
 {
@@ -95,7 +93,7 @@ public function store(Request $request): array|string
 ```
 The function `validate()` will return true when there are no errors.
 
-#### When there are errors, we can get them with function `getErrors()`.
+#### When there are errors, we can get them with the function `getErrors()`.
 ```php
 $validated = $request->validate([
     'username' => ['required', 'string', 'min:3'],
@@ -108,12 +106,12 @@ if ($validated === false) {
 ```
 
 ### Migrations
-If you want to create tables into your database, you can use the migration functionality.
-Only one migration needs to be created for a table, you can add this file in path `database/migrations`.
+If you want to create tables into your database, you can use the database migration.
+These migrations can be found in `database/migrations`.
 The file name must start with the letter m, then you describe the range and action that this migration will perform.
 So your migrations should look like this `m0001_create_first_table` -> `m0002_create_second_table` etc.
 
-#### Let's migrate the users table
+#### Create a migration for table users
 ```php
 class m0001_create_users_table
 {
@@ -134,7 +132,7 @@ class m0001_create_users_table
 }
 ```
 
-#### Let's migrate with the PHP command
+#### Start migrating with the PHP command
 ```bash
 $ php migration
 
@@ -147,12 +145,10 @@ And there we go, all migrations should be applied. If there are any errors, chec
 
 ### Models
 As soon as we want to create users in the database, we need to create a User model that can do this for us. 
-A model represents a table in the database. It is able to save data safely.
 
-#### Let's create a User model in directory `app/Models`
-A created model must inherit class Model. Each model has two functions, tableName and attributes. 
-In the function `tableName()` we return the table name. The function `attributes()` returns an array of columns which
-needs to be filled with data.
+#### Let's create a User model in `app/Models`
+A created model must extend class Model. Each model has two functions, tableName and attributes. 
+The function `attributes()` returns an array of columns which can be filled with data.
 ````php
 class User extends Model
 {
@@ -171,7 +167,7 @@ class User extends Model
 ````
 #### Now we can use the model for writing data to the table.
 In the controller we first want to create an instance of the User model. 
-This instance represents a user that we want to write to the database.
+This instance will represent a user that we want to write to the database.
 
 We can do this by using function `registerColumn()`:
 ```php 
@@ -190,7 +186,7 @@ $user->registerColumns([
 ]);
 $user->save()
 ```
-#### The helper function `make()` from class `Helpers/Hash` allows us to encrypt passwords.
+#### The helper function `make()` from class `Helpers/Hash` allows us to hash passwords.
 ```php
 'password' => Hash::make($request->input('password'));
 ```
