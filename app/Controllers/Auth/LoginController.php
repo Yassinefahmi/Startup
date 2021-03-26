@@ -31,7 +31,7 @@ class LoginController extends Controller
             'username' => $request->input('username')
         ]);
 
-        if ($user == null) {
+        if ($user === null) {
             $this->flashMessage->setFlashMessage('danger', 'This username does not exist!');
 
             return $this->view('auth/login');

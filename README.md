@@ -3,7 +3,7 @@ The starters framework for your MVC application.
 
 ### Configure the router
 
-The router can be found under file `public/index.php`. No worries, the router will get its own file in the future.
+The router can be found in `public/index.php`. No worries, the router will get its own file in the future.
 
 You can currently only define a `get` and `post` route. The router accepts two paramaters, which will be the path and callback.
 #### You can use a closure:
@@ -25,7 +25,7 @@ $app->router->post('/example', [\App\Controllers\ExampleController::class, 'stor
 ### Create a controller
 The controllers can be found in directory `app/Controllers`. The authentication controllers are included as default 
 and can be adjusted anytime. The controllers should always extend class `app/General/Controller.php`.
-If you want to return a view from a method, you can use the function `view()` from the object that accepts a path and parameters 
+If you want to return a view from a method, you can use the method `view()` from the object that accepts a path and parameters 
 which is by default an empty array.
 
 #### Load view `home.php`:
@@ -64,7 +64,7 @@ You can create a new default layout or rename the current one. The default layou
 This placeholder will automatically be replaced with the given view in the controller.
 
 ### Validation
-The request also provides a validation process. The validate function accepts an array of attributes and rules. 
+The request also provides a validation process. The validate method accepts an array of attributes and rules. 
 
 I currently support a number of validation rules, which will be expanded in the future. 
 ```
@@ -91,9 +91,9 @@ public function store(Request $request): array|string
     return $this->view('auth/register');
 }
 ```
-The function `validate()` will return true when there are no errors.
+The method `validate()` will return true when there are no errors.
 
-#### When there are errors, we can get them with the function `getErrors()`.
+#### When there are errors, we can get them with method `getErrors()`.
 ```php
 $validated = $request->validate([
     'username' => ['required', 'string', 'min:3'],
@@ -147,8 +147,9 @@ And there we go, all migrations should be applied. If there are any errors, chec
 As soon as we want to create users in the database, we need to create a User model that can do this for us. 
 
 #### Let's create a User model in `app/Models`
-A created model must extend class Model. Each model has two functions, tableName and attributes. 
-The function `attributes()` returns an array of columns which can be filled with data.
+A created model must extend class Model. Each model should have three methods by default. 
+These are tableName, primaryKey and fillable. The method `fillable()` returns an array of columns which can be filled with data.
+The primary key is by default `id`. Feel free to override it in the model.
 ````php
 class User extends Model
 {
@@ -156,8 +157,13 @@ class User extends Model
     {
         return 'users';
     }
+    
+    public function primaryKey(): string
+    {
+        return "id";
+    }
 
-    public function attributes(): array
+    public function fillable(): array
     {
         return [
             'username', 'password'
@@ -169,7 +175,7 @@ class User extends Model
 In the controller we first want to create an instance of the User model. 
 This instance will represent a user that we want to write to the database.
 
-We can do this by using function `registerColumn()`:
+We can do this by using method `registerColumn()`:
 ```php 
 $user = new User();
 $user->registerColumn('username', $request->input('username'));
@@ -177,7 +183,7 @@ $user->registerColumn('username', $request->input('password'));
 $user->save()  
 ```
 
-Or by using the function `registerColumns()`:
+Or by using the method `registerColumns()`:
 ```php 
 $user = new User();
 $user->registerColumns([
@@ -186,9 +192,39 @@ $user->registerColumns([
 ]);
 $user->save()
 ```
-#### The helper function `make()` from class `Helpers/Hash` allows us to hash passwords.
+#### The helper method `make()` from class `Helpers/Hash` allows us to hash passwords.
 ```php
 'password' => Hash::make($request->input('password'));
+```
+
+### Authentication
+With the static method `findWhere()` we can search for a user with the given username.
+The static method will return null when there are no results.
+```php
+$user = User::findWhere([
+    'username' => $request->input('username')
+]);
+
+// Be aware, it is not wise to tell a visitor that the given username has not been registered.
+// This is duo privacy reasons. 
+if ($user === null) {
+    $this->flashMessage->setFlashMessage('danger', 'This username does not exist!');
+
+    return $this->view('auth/login');
+} 
+```
+Then we can retrieve the password with method `getAttributeValue($attr)` and verify the given password 
+with the static helper method `verify($givenPassword, $hashedPassword)`.
+```php
+if (Hash::verify($request->input('password'), $user->getAttributeValue('password')) === false) {
+    $this->flashMessage->setFlashMessage('danger', 'The user credentials were incorrect!');
+
+    return $this->view('auth/login');
+} 
+```
+With the method `authenticatedUser()` we can tell the application to authenticate the given user.
+```php
+$this->app->authenticateUser($user); 
 ```
 
 ## Security

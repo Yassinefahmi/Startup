@@ -11,7 +11,6 @@ $config = [
 
 $app = new Application(dirname(__DIR__), $config);
 
-$app->router->get('/test', 'string');
 $app->router->get('/login', [LoginController::class, 'index']);
 $app->router->post('/login', [LoginController::class, 'authenticate']);
 

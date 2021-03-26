@@ -13,14 +13,14 @@ abstract class Model
 
     abstract public static function tableName(): string;
 
-    public function fillable()
-    {
-        return [];
-    }
-
     public function primaryKey(): string
     {
         return 'id';
+    }
+
+    public function fillable(): array
+    {
+        return [];
     }
 
     public function registerColumn(string $attribute, $value)
