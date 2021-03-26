@@ -5,7 +5,11 @@ use App\General\Application;
 use App\Controllers\Auth\LoginController;
 use App\Controllers\Auth\RegisterController;
 
-$app = new Application(dirname(__DIR__));
+$config = [
+    'userModel' => \App\Models\User::class
+];
+
+$app = new Application(dirname(__DIR__), $config);
 
 $app->router->get('/test', 'string');
 $app->router->get('/login', [LoginController::class, 'index']);

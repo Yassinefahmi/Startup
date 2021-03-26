@@ -11,11 +11,6 @@ class User extends Model
         return 'users';
     }
 
-    public function primaryKey(): string
-    {
-        return 'id';
-    }
-
     public function fillable(): array
     {
         return [

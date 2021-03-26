@@ -1,3 +1,8 @@
+<?php
+    echo '<pre>';
+    var_dump(\App\General\Application::$app->getAuthenticatedUser());
+?>
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -19,12 +24,18 @@
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="/">Home</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/login">Login</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/register">Register</a>
-                </li>
+                <?php if (\App\General\Application::isAuthenticated()): ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Logout</a>
+                    </li>
+                <?php else: ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/register">Register</a>
+                    </li>
+                <?php endif; ?>
             </ul>
         </div>
     </div>

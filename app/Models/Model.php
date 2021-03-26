@@ -12,8 +12,16 @@ abstract class Model
     private array $data;
 
     abstract public static function tableName(): string;
-    abstract public function fillable(): array;
-    abstract public function primaryKey(): string;
+
+    public function fillable()
+    {
+        return [];
+    }
+
+    public function primaryKey(): string
+    {
+        return 'id';
+    }
 
     public function registerColumn(string $attribute, $value)
     {

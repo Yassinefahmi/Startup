@@ -6,6 +6,8 @@ namespace App\General;
 
 
 use App\Controllers\Controller;
+use App\Models\Model;
+use App\Models\User;
 
 class Application
 {
@@ -14,13 +16,18 @@ class Application
     public Router $router;
     public Request $request;
     public Response $response;
+
     public static Application $app;
+
     private Session $session;
     private Database $database;
     private Migration $migration;
     private Controller $controller;
 
-    public function __construct($rootPath)
+    private ?User $user = null;
+    private string $userModel;
+
+    public function __construct($rootPath, array $config)
     {
         self::$rootDirectory = $rootPath;
 
@@ -32,6 +39,17 @@ class Application
         $this->session = new Session();
         $this->database = new Database();
         $this->migration = new Migration($this->database);
+
+        $this->userModel = $config['userModel'];
+
+        $primaryValue = $this->session->get('user');
+
+        if ($primaryValue) {
+            $primaryKey = $this->userModel::primaryKey();
+            $this->user = $this->userModel::findWhere([
+                $primaryKey => $primaryValue
+            ]);
+        }
     }
 
     public function getSession(): Session
@@ -67,5 +85,29 @@ class Application
     public function run(): void
     {
         echo $this->router->resolve();
+    }
+
+    public static function isAuthenticated(): bool
+    {
+        return self::$app->user !== null;
+    }
+
+    public function getAuthenticatedUser(): ?Model
+    {
+        return $this->user;
+    }
+
+    public function authenticateUser(User $user)
+    {
+        $this->user = $user;
+        $primaryKey = $user->primaryKey();
+        $primaryValue = $user->{$primaryKey};
+        $this->session->set('user', $primaryValue);
+    }
+
+    public function logoutUser()
+    {
+        $this->user = null;
+        $this->session->remove('user');
     }
 }

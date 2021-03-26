@@ -31,13 +31,19 @@ class LoginController extends Controller
             'username' => $request->input('username')
         ]);
 
-        if ($user === false || Hash::verify($request->input('password'), $user->getAttributeValue('password')) === false) {
+        if ($user == null) {
+            $this->flashMessage->setFlashMessage('danger', 'This username does not exist!');
+
+            return $this->view('auth/login');
+        }
+
+        if (Hash::verify($request->input('password'), $user->getAttributeValue('password')) === false) {
           $this->flashMessage->setFlashMessage('danger', 'The user credentials were incorrect!');
 
           return $this->view('auth/login');
         }
 
-        // Authenticate
+        $this->app->authenticateUser($user);
 
         return $this->view('home');
     }
