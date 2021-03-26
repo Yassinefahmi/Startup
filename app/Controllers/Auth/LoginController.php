@@ -6,6 +6,7 @@ namespace App\Controllers\Auth;
 
 use App\Controllers\Controller;
 use App\General\Request;
+use App\Helpers\Hash;
 use App\Models\User;
 
 class LoginController extends Controller
@@ -23,13 +24,21 @@ class LoginController extends Controller
         ]);
 
         if ($validated === false) {
-            $this->view('auth/login', $request->getErrors());
+            return $this->view('auth/login', $request->getErrors());
         }
 
-        echo "<pre>";
-        var_dump(User::findWhere(['username' => $request->input('username')]));
-        echo "</pre>";
+        $user = User::findWhere([
+            'username' => $request->input('username')
+        ]);
 
-        return $this->view('auth/login');
+        if ($user === false || Hash::verify($request->input('password'), $user->getAttributeValue('password')) === false) {
+          $this->flashMessage->setFlashMessage('danger', 'The user credentials were incorrect!');
+
+          return $this->view('auth/login');
+        }
+
+        // Authenticate
+
+        return $this->view('home');
     }
 }

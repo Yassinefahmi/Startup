@@ -12,14 +12,13 @@ abstract class Model
     private array $data;
 
     abstract public static function tableName(): string;
-
-    abstract public function attributes(): array;
+    abstract public function fillable(): array;
+    abstract public function primaryKey(): string;
 
     public function registerColumn(string $attribute, $value)
     {
         $this->data[$attribute] = $value;
     }
-
     public function registerColumns(array $values)
     {
         $this->data = $values;
@@ -28,7 +27,7 @@ abstract class Model
     public function save(): bool
     {
         $tableName = $this->tableName();
-        $attributes = $this->attributes();
+        $attributes = $this->fillable();
         $params = array_map(fn($attribute) => ":$attribute", $attributes);
 
         $implodedAttributes = implode(',', $attributes);
@@ -43,6 +42,11 @@ abstract class Model
         $statement->execute();
 
         return true;
+    }
+
+    public function getAttributeValue(string $attribute)
+    {
+        return $this->{$attribute};
     }
 
     public static function findWhere(array $where): mixed
@@ -61,7 +65,7 @@ abstract class Model
 
         $statement->execute();
 
-        return $statement->fetchObject(static::class);
+        return $statement->fetchObject(static::class);;
     }
 
     private static function prepare(string $sql): PDOStatement

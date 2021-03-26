@@ -5,10 +5,18 @@ namespace App\Controllers;
 
 
 use App\General\Application;
+use App\General\Session;
+use JetBrains\PhpStorm\Pure;
 
 class Controller
 {
     public string $layout = 'main';
+    protected Session $flashMessage;
+
+    #[Pure] public function __construct()
+    {
+        $this->flashMessage = Application::$app->getSession();
+    }
 
     public function setLayout($layout)
     {

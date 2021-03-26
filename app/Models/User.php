@@ -11,7 +11,12 @@ class User extends Model
         return 'users';
     }
 
-    public function attributes(): array
+    public function primaryKey(): string
+    {
+        return 'id';
+    }
+
+    public function fillable(): array
     {
         return [
             'username', 'password'
