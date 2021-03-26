@@ -123,7 +123,7 @@ class Request
             $rule = substr($rule, 0, strpos($rule, ":"));
         }
 
-        $errorMessage = $this->errorMessages()[$rule] ?? 'This rule has no errors';
+        $errorMessage = $this->errorMessages()[$rule] ?? 'This rule has no error message';
 
         foreach ($placeholders as $key => $value) {
             $errorMessage = str_replace("{{$rule}}", $value, $errorMessage);

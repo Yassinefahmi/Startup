@@ -11,7 +11,7 @@ abstract class Model
 {
     private array $data;
 
-    abstract public function tableName(): string;
+    abstract public static function tableName(): string;
 
     abstract public function attributes(): array;
 
@@ -43,6 +43,25 @@ abstract class Model
         $statement->execute();
 
         return true;
+    }
+
+    public static function findWhere(array $where): mixed
+    {
+        $tableName = static::tableName();
+        $attributes = array_keys($where);
+
+        $conditions = implode("AND ",
+            array_map(fn($attr) => "$attr = :$attr", $attributes)
+        );
+        $statement = self::prepare("SELECT * FROM $tableName WHERE $conditions");
+
+        foreach ($where as $key => $value) {
+            $statement->bindValue(":$key", $value);
+        }
+
+        $statement->execute();
+
+        return $statement->fetchObject(static::class);
     }
 
     private static function prepare(string $sql): PDOStatement

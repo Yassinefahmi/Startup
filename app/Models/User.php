@@ -6,7 +6,7 @@ namespace App\Models;
 
 class User extends Model
 {
-    public function tableName(): string
+    public static function tableName(): string
     {
         return 'users';
     }
