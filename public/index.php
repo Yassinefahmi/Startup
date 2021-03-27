@@ -4,17 +4,22 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use App\General\Application;
 use App\Controllers\Auth\LoginController;
 use App\Controllers\Auth\RegisterController;
+use App\Models\User;
 
 $config = [
-    'userModel' => \App\Models\User::class
+    'userModel' => User::class
 ];
 
 $app = new Application(dirname(__DIR__), $config);
 
-$app->router->get('/login', [LoginController::class, 'index']);
-$app->router->post('/login', [LoginController::class, 'authenticate']);
+/**
+ * Configure routes
+ */
 
-$app->router->get('/register', [RegisterController::class, 'index']);
-$app->router->post('/register', [RegisterController::class, 'store']);
+$app->getRouter()->get('/login', [LoginController::class, 'index']);
+$app->getRouter()->post('/login', [LoginController::class, 'authenticate']);
 
-$app->run();
+$app->getRouter()->get('/register', [RegisterController::class, 'index']);
+$app->getRouter()->post('/register', [RegisterController::class, 'store']);
+
+echo $app->getRouter()->resolve();

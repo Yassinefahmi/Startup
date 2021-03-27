@@ -1,8 +1,3 @@
-<?php
-    echo '<pre>';
-    var_dump(\App\General\Application::$app->getAuthenticatedUser());
-?>
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -22,7 +17,7 @@
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/">Home</a>
+                    <a class="nav-link <?= \App\Helpers\Route::getCurrentPath() === '/' ? 'active' : '' ?>" aria-current="page" href="/">Home</a>
                 </li>
                 <?php if (\App\General\Application::isAuthenticated()): ?>
                     <li class="nav-item">
@@ -30,10 +25,10 @@
                     </li>
                 <?php else: ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="/login">Login</a>
+                        <a class="nav-link <?= \App\Helpers\Route::getCurrentPath() === '/login' ? 'active' : '' ?>" href="/login">Login</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/register">Register</a>
+                        <a class="nav-link <?= \App\Helpers\Route::getCurrentPath() === '/register' ? 'active' : '' ?>" href="/register">Register</a>
                     </li>
                 <?php endif; ?>
             </ul>

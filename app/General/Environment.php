@@ -5,32 +5,62 @@ namespace App\General;
 
 
 use Dotenv\Dotenv;
+use Exception;
+use RuntimeException;
 
 class Environment
 {
-    public array $environmentVariables;
+    /**
+     * @var array
+     */
+    private array $databaseEnvironmentVariables;
 
+    /**
+     * @var RuntimeException|Exception|null
+     */
+    private RuntimeException|Exception|null $exception = null;
+
+    /**
+     * Environment constructor.
+     */
     public function __construct()
     {
         $dotenv = Dotenv::createImmutable(__DIR__ . '/../..');
         $dotenv->load();
-        $dotenv->required(['DB_HOST', 'DB_PORT', 'DB_DATABASE', 'DB_USERNAME'])->notEmpty();
-        $dotenv->required('DB_PASSWORD');
 
-        $this->environmentVariables = $_ENV;
+        try {
+            $dotenv->required(['DB_HOST', 'DB_PORT', 'DB_DATABASE', 'DB_USERNAME'])->notEmpty();
+            $dotenv->required('DB_PASSWORD');
+        } catch (RuntimeException $exception) {
+            $this->exception = $exception;
+        }
+
+        $this->databaseEnvironmentVariables = [
+            'DB_HOST' => $_ENV['DB_HOST'],
+            'DB_PORT' => $_ENV['DB_PORT'],
+            'DB_DATABASE' => $_ENV['DB_DATABASE'],
+            'DB_USERNAME' => $_ENV['DB_USERNAME'],
+            'DB_PASSWORD' => $_ENV['DB_PASSWORD']
+        ];
     }
 
     /**
+     * Get all environment variables needed for accomplishing a database connection.
+     *
      * @return array
      */
     public function getDatabaseEnvironmentVariables(): array
     {
-        return [
-            'DB_HOST' => $this->environmentVariables['DB_HOST'],
-            'DB_PORT' => $this->environmentVariables['DB_PORT'],
-            'DB_DATABASE' => $this->environmentVariables['DB_DATABASE'],
-            'DB_USERNAME' => $this->environmentVariables['DB_USERNAME'],
-            'DB_PASSWORD' => $this->environmentVariables['DB_PASSWORD']
-        ];
+        return $this->databaseEnvironmentVariables;
+    }
+
+    /**
+     * Get an exception if the variables does not meet the requirements.
+     *
+     * @return Exception|RuntimeException|null
+     */
+    public function getException(): Exception|RuntimeException|null
+    {
+        return $this->exception;
     }
 }

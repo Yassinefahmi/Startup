@@ -8,18 +8,18 @@ The router can be found in `public/index.php`. No worries, the router will get i
 You can currently only define a `get` and `post` route. The router accepts two paramaters, which will be the path and callback.
 #### You can use a closure:
 ```php
-$app->router->get('/home', function () {
+$app->getRouter()->get('/home', function () {
     return 'This is the home route.';
 });
 ```
 
 #### Or attach a route to a controller and method.
 ```php
-$app->router->get('/example', [\App\Controllers\ExampleController::class, 'index']);
+$app->getRouter()->get('/example', [\App\Controllers\ExampleController::class, 'index']);
 ```
 This can also be done for `post`.
 ```php
-$app->router->post('/example', [\App\Controllers\ExampleController::class, 'store']);
+$app->getRouter()->post('/example', [\App\Controllers\ExampleController::class, 'store']);
 ```
 
 ### Create a controller
@@ -35,7 +35,7 @@ public function index(): array|string
     return $this->view('home');
 }
 ```
-#### If the view is located in a directory inside `view`, just use a forward slash:
+#### If the view is located in a directory, just use a forward slash:
 ```php
 return $this->view('directory/home');
 ```
@@ -59,7 +59,7 @@ echo $foo . ' ' . $params[1];
 ```
 
 ### Create a view
-The views can be found in directory `views`. This directory has by default a file `layouts/main.php` layout.
+The views can be found in directory `views`. This directory has by default a `layouts/main.php` layout.
 You can create a new default layout or rename the current one. The default layout holds the `{{ content }}` placeholder. 
 This placeholder will automatically be replaced with the given view in the controller.
 
@@ -198,10 +198,10 @@ $user->save()
 ```
 
 ### Authentication
-With the static method `findWhere()` we can search for a user with the given username.
+With the static method `findOneWhere()` we can search for a user with the given username.
 The static method will return null when there are no results.
 ```php
-$user = User::findWhere([
+$user = User::findOneWhere([
     'username' => $request->input('username')
 ]);
 

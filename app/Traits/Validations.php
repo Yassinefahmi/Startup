@@ -4,6 +4,8 @@
 namespace App\Traits;
 
 
+use JetBrains\PhpStorm\Pure;
+
 trait Validations
 {
     public function required($value): bool
@@ -15,12 +17,12 @@ trait Validations
         return true;
     }
 
-    public function email(string $value): bool
+    #[Pure] public function email(string $value): bool
     {
         return filter_var($value, FILTER_VALIDATE_EMAIL);
     }
 
-    public function min($value, string $amount): bool
+    #[Pure] public function min($value, string $amount): bool
     {
         if (is_string($value) && strlen($value) < $amount) {
             return false;
@@ -37,7 +39,7 @@ trait Validations
         return true;
     }
 
-    public function max($value, string $amount): bool
+    #[Pure] public function max($value, string $amount): bool
     {
         if (is_string($value) && strlen($value) > $amount) {
             return false;
@@ -54,7 +56,7 @@ trait Validations
         return true;
     }
 
-    public function confirmed($password, $passwordConfirmed)
+    #[Pure] public function confirmed($password, $passwordConfirmed): bool
     {
         return strcmp($password, $passwordConfirmed) == 0;
     }

@@ -27,7 +27,7 @@ class LoginController extends Controller
             return $this->view('auth/login', $request->getErrors());
         }
 
-        $user = User::findWhere([
+        $user = User::findOneWhere([
             'username' => $request->input('username')
         ]);
 

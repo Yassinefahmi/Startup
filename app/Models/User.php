@@ -11,10 +11,11 @@ class User extends Model
         return 'users';
     }
 
-    public function fillable(): array
+    public function fillAble(): array
     {
         return [
-            'username', 'password'
+            'username',
+            'password'
         ];
     }
 }

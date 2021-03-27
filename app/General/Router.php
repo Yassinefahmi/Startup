@@ -6,28 +6,58 @@ namespace App\General;
 
 class Router
 {
-    public Request $request;
-    public Response $response;
-
+    /**
+     * @var Request
+     */
+    private Request $request;
+    /**
+     * @var Response
+     */
+    private Response $response;
+    /**
+     * @var array
+     */
     protected array $routes = [];
 
+    /**
+     * Router constructor.
+     * @param Request $request
+     * @param Response $response
+     */
     public function __construct(Request $request, Response $response)
     {
         $this->request = $request;
         $this->response = $response;
     }
 
+    /**
+     * Register a GET route.
+     *
+     * @param $path
+     * @param $callback
+     */
     public function get($path, $callback): void
     {
         $this->routes['get'][$path] = $callback;
     }
 
+    /**
+     * Register a POST route.
+     *
+     * @param $path
+     * @param $callback
+     */
     public function post($path, $callback): void
     {
         $this->routes['post'][$path] = $callback;
     }
 
-    public function resolve()
+    /**
+     * Render functionalities if route does or not exist.
+     *
+     * @return mixed
+     */
+    public function resolve(): mixed
     {
         $path = $this->request->getPath();
         $method = $this->request->getMethod();
@@ -51,6 +81,13 @@ class Router
         return call_user_func($callback, $this->request);
     }
 
+    /**
+     * Render the given view and seed it with parameters.
+     *
+     * @param $view
+     * @param array $params
+     * @return array|string
+     */
     public function renderView($view, $params = []): array|string
     {
         $layoutContents = $this->layoutContent();
@@ -59,6 +96,12 @@ class Router
         return str_replace('{{ content }}', $viewContent, $layoutContents);
     }
 
+    /**
+     * Replace {{ content }} with actually content of a view.
+     *
+     * @param $viewContent
+     * @return array|bool|string
+     */
     private function renderContent($viewContent): array|bool|string
     {
         $layoutContents = $this->layoutContent();
@@ -66,6 +109,11 @@ class Router
         return str_replace('{{ content }}', $viewContent, $layoutContents);
     }
 
+    /**
+     * Render the layout.
+     *
+     * @return bool|string
+     */
     protected function layoutContent(): bool|string
     {
         $app = Application::$app;
@@ -79,6 +127,13 @@ class Router
         return ob_get_clean();
     }
 
+    /**
+     * Render the given view and seed it with parameters.
+     *
+     * @param $view
+     * @param $params
+     * @return bool|string
+     */
     protected function renderOnlyView($view, $params): bool|string
     {
         foreach ($params as $key => $value) {
