@@ -227,6 +227,54 @@ With the method `authenticatedUser()` we can tell the application to authenticat
 $this->app->authenticateUser($user); 
 ```
 
+### Middlewares
+With middlewares you can implement restrictions on methods. For example, if a user is not authenticated
+then this user should get a 403 response back.
+
+#### First, let's create a middleware `AuthMiddleware` class in `app/Middlewares`
+Be aware, the `execute()` method is abstract and should always be there in your middleware.
+```php 
+class AuthMiddleware extends Middleware
+{
+    public function execute(): mixed {}
+}
+```
+In the execute method we need to validate whether the user is authenticated.
+We return an exception when the user is not authenticated.
+```php
+public function execute(): mixed
+{
+    if (Application::isAuthenticated() === false) {
+        return throw new ForbiddenException();
+    }
+    
+    // Dive into the void
+}
+```
+Now we want to use the `AuthMiddleware` in our `HomeController` since its restricted for only authenticated users.
+#### We can do this by registering the middleware in the constructor:
+```php
+public function __construct()
+{
+    parent::__construct();
+
+    $this->registerMiddleware(new AuthMiddleware());
+} 
+```
+
+#### We can also restrict specific methods by passing an array:
+```php
+public function __construct()
+{
+    parent::__construct();
+
+    // Use AuthMiddleware only for method index
+    $this->registerMiddleware(new AuthMiddleware([
+        'index'    
+    ]));
+} 
+```
+
 ## Security
 
 If you discover any security related issues, please create an issue.

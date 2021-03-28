@@ -20,5 +20,5 @@ abstract class Middleware
      *
      * @return mixed
      */
-    abstract public function execute(): Exception;
+    abstract public function execute(): mixed;
 }
