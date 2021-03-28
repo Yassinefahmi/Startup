@@ -4,6 +4,8 @@
 namespace App\General;
 
 
+use App\Exceptions\NotFoundException;
+
 class Router
 {
     /**
@@ -56,6 +58,7 @@ class Router
      * Render functionalities if route does or not exist.
      *
      * @return mixed
+     * @throws NotFoundException
      */
     public function resolve(): mixed
     {
@@ -66,7 +69,7 @@ class Router
         if ($callback === false) {
             $this->response->setStatus(404);
 
-            return $this->renderView('responses/404');
+            return throw new NotFoundException();
         }
 
         if (is_string($callback)) {
@@ -76,6 +79,13 @@ class Router
         if (is_array($callback)) {
             $callback[0] = new $callback[0]();
             Application::$app->setController($callback[0]);
+
+            $controller = Application::$app->getController();
+            $controller->setAction($callback[1]);
+
+            foreach ($controller->getMiddlewares() as $middleware) {
+                $middleware->execute();
+            }
         }
 
         return call_user_func($callback, $this->request);
