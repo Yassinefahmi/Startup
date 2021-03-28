@@ -16,10 +16,10 @@
         </button>
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
             <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link <?= \App\Helpers\Route::getCurrentPath() === '/home' ? 'active' : '' ?>" aria-current="page" href="/home">Home</a>
-                </li>
                 <?php if (\App\General\Application::isAuthenticated()): ?>
+                    <li class="nav-item">
+                        <a class="nav-link <?= \App\Helpers\Route::getCurrentPath() === '/home' ? 'active' : '' ?>" aria-current="page" href="/home">Home</a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Logout</a>
                     </li>

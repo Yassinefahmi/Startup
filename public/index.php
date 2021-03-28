@@ -24,4 +24,10 @@ $app->getRouter()->post('/register', [RegisterController::class, 'store']);
 
 $app->getRouter()->get('/home', [\App\Controllers\HomeController::class, 'index']);
 
-echo $app->getRouter()->resolve();
+try {
+    echo $app->getRouter()->resolve();
+} catch (Exception $exception) {
+    echo $app->getRouter()->renderView('_error', [
+        'exception' => $exception
+    ]);
+}
