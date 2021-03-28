@@ -22,4 +22,6 @@ $app->getRouter()->post('/login', [LoginController::class, 'authenticate']);
 $app->getRouter()->get('/register', [RegisterController::class, 'index']);
 $app->getRouter()->post('/register', [RegisterController::class, 'store']);
 
+$app->getRouter()->get('/home', [\App\Controllers\HomeController::class, 'index']);
+
 echo $app->getRouter()->resolve();

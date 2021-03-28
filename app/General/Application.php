@@ -79,8 +79,8 @@ class Application
         $primaryValue = $this->session->get('user');
 
         if ($primaryValue) {
-            $primaryKey = $this->userModel::primaryKey();
-            $this->user = $this->userModel::findWhere([
+            $primaryKey = (new $this->userModel)->primaryKey();
+            $this->user = $this->userModel::findOneWhere([
                 $primaryKey => $primaryValue
             ]);
         }
