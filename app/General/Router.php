@@ -84,7 +84,7 @@ class Router
             $controller->setAction($callback[1]);
 
             foreach ($controller->getMiddlewares() as $middleware) {
-                $middleware->execute();
+                $middleware->handle();
             }
         }
 

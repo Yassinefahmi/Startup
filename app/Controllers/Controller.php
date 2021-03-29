@@ -95,6 +95,16 @@ class Controller
     }
 
     /**
+     * Register middlewares for the controller.
+     *
+     * @param array $middleware
+     */
+    public function registerMiddlewares(array $middleware)
+    {
+        $this->middlewares[] = $middleware;
+    }
+
+    /**
      * Get all registered middlewares of the controller.
      *
      * @return Middleware[]

@@ -4,6 +4,7 @@
 namespace App\Middlewares;
 
 
+use App\General\Application;
 use Exception;
 
 abstract class Middleware
@@ -20,5 +21,19 @@ abstract class Middleware
      *
      * @return mixed
      */
-    abstract public function execute(): mixed;
+    abstract protected function execute(): mixed;
+
+    /**
+     * Check whether the middleware is assigned to the performed action.
+     *
+     * @return mixed
+     */
+    public function handle(): mixed
+    {
+        if (empty($this->actions) || in_array(Application::$app->getController()->getAction(), $this->actions)) {
+            return $this->execute();
+        }
+
+        return null;
+    }
 }
