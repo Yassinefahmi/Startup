@@ -1,5 +1,6 @@
 <h1>Register</h1>
 <form method="post" action="">
+    <input type="hidden" name="csrf" value="<?= $_SESSION['csrf'] ?>">
     <div class="mb-3">
         <label class="form-label">Username</label>
         <input type="text" name="username" class="form-control">

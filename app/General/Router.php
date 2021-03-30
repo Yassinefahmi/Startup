@@ -5,6 +5,7 @@ namespace App\General;
 
 
 use App\Exceptions\NotFoundException;
+use App\Middlewares\CsrfTokenMiddleware;
 
 class Router
 {
@@ -52,6 +53,21 @@ class Router
     public function post($path, $callback): void
     {
         $this->routes['post'][$path] = $callback;
+    }
+
+    /**
+     * Redirect to another URI.
+     *
+     * @param string $path
+     * @param string $destinationPath
+     * @param int $responseCode
+     */
+    public function redirect(string $path, string $destinationPath, int $responseCode = 200): void
+    {
+        if ($this->request->getPath() === $path) {
+            $this->response->setStatus($responseCode);
+            $this->response->redirect($destinationPath);
+        }
     }
 
     /**
@@ -105,8 +121,8 @@ class Router
      */
     public function renderView($view, $params = []): array|string
     {
-        $layoutContents = $this->layoutContent();
         $viewContent = $this->renderOnlyView($view, $params);
+        $layoutContents = $this->layoutContent();
 
         return str_replace('{{ content }}', $viewContent, $layoutContents);
     }

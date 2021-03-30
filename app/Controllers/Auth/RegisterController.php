@@ -5,18 +5,29 @@ namespace App\Controllers\Auth;
 
 
 use App\Controllers\Controller;
+use App\General\Application;
 use App\General\Request;
 use App\Helpers\Hash;
 use App\Models\User;
+use JetBrains\PhpStorm\NoReturn;
 
 class RegisterController extends Controller
 {
     public function index(): array|string
     {
+        if (Application::isAuthenticated()) {
+            $this->redirect('home');
+        }
+
         return $this->view('auth/register');
     }
 
-    public function store(Request $request): array|string
+    /**
+     * Creates a user.
+     *
+     * @param Request $request
+     */
+    #[NoReturn] public function store(Request $request): void
     {
         $validated = $request->validate([
             'username' => ['required', 'string', 'min:3'],
@@ -24,7 +35,7 @@ class RegisterController extends Controller
         ]);
 
         if ($validated === false) {
-            return $this->view('auth/register', $request->getErrors());
+            $this->redirect('register');
         }
 
         $user = new User();
@@ -36,6 +47,6 @@ class RegisterController extends Controller
 
         $this->flashMessage->setFlashMessage('success', 'The user has successfully been registered.');
 
-        return $this->view('auth/login');
+        $this->redirect('register');
     }
 }

@@ -5,18 +5,24 @@ namespace App\Controllers\Auth;
 
 
 use App\Controllers\Controller;
+use App\General\Application;
 use App\General\Request;
 use App\Helpers\Hash;
 use App\Models\User;
+use JetBrains\PhpStorm\NoReturn;
 
 class LoginController extends Controller
 {
     public function index(): array|string
     {
+        if (Application::isAuthenticated()) {
+            $this->redirect('home');
+        }
+
         return $this->view('auth/login');
     }
 
-    public function authenticate(Request $request): array|string
+    #[NoReturn] public function authenticate(Request $request): void
     {
         $validated = $request->validate([
             'username' => ['required', 'string'],
@@ -24,27 +30,27 @@ class LoginController extends Controller
         ]);
 
         if ($validated === false) {
-            return $this->view('auth/login', $request->getErrors());
+            $this->redirect('login');
         }
 
         $user = User::findOneWhere([
             'username' => $request->input('username')
         ]);
 
-        if ($user === null) {
+        if ($user === false) {
             $this->flashMessage->setFlashMessage('danger', 'This username does not exist!');
 
-            return $this->view('auth/login');
+            $this->redirect('login');
         }
 
         if (Hash::verify($request->input('password'), $user->getAttributeValue('password')) === false) {
           $this->flashMessage->setFlashMessage('danger', 'The user credentials were incorrect!');
 
-          return $this->view('auth/login');
+          $this->redirect('login');
         }
 
         $this->app->authenticateUser($user);
 
-        return $this->view('home');
+        $this->redirect('home');
     }
 }
