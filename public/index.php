@@ -1,28 +1,18 @@
 <?php
 require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../config/app.php';
+
+/** @var $config array */
 
 use App\General\Application;
-use App\Controllers\Auth\LoginController;
-use App\Controllers\Auth\RegisterController;
-use App\Models\User;
-
-$config = [
-    'userModel' => User::class
-];
 
 $app = new Application(dirname(__DIR__), $config);
 
 /**
- * Configure routes
+ * Load all initialized routes.
  */
 
-$app->getRouter()->get('/login', [LoginController::class, 'index']);
-$app->getRouter()->post('/login', [LoginController::class, 'authenticate']);
-
-$app->getRouter()->get('/register', [RegisterController::class, 'index']);
-$app->getRouter()->post('/register', [RegisterController::class, 'store']);
-
-$app->getRouter()->get('/home', [\App\Controllers\HomeController::class, 'index']);
+require_once __DIR__ . '/../routes/web.php';
 
 try {
     echo $app->getRouter()->resolve();

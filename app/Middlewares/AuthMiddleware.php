@@ -18,5 +18,7 @@ class AuthMiddleware extends Middleware
         if (Application::isAuthenticated() === false) {
             return throw new ForbiddenException();
         }
+
+        return null;
     }
 }

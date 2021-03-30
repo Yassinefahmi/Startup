@@ -3,9 +3,14 @@ The starters framework for your MVC application.
 
 ### Configure the router
 
-The router can be found in `public/index.php`. No worries, the router will get its own file in the future.
+The web router can be found in `routes/web.php`. You can currently only define a `get` and `post` route. 
+The router accepts two paramaters, which will be the path and callback.
 
-You can currently only define a `get` and `post` route. The router accepts two paramaters, which will be the path and callback.
+#### Load a view named about.php:
+```php
+$app->getRouter()->get('/about', 'about');
+```
+
 #### You can use a closure:
 ```php
 $app->getRouter()->get('/home', function () {
@@ -13,7 +18,7 @@ $app->getRouter()->get('/home', function () {
 });
 ```
 
-#### Or attach a route to a controller and method.
+#### Or attach a route to a controller and method:
 ```php
 $app->getRouter()->get('/example', [\App\Controllers\ExampleController::class, 'index']);
 ```
@@ -79,7 +84,7 @@ I currently support a number of validation rules, which will be expanded in the 
 
 Feel free to add more in file `app/Traits/Validations.php`.
 
-#### In our `RegisterController` we want to validate if the username has more than 3 characters and whether the password confirmation are matching.
+#### In our `RegisterController` we want to validate if the username has more than 3 characters and whether the password confirmation are matching:
 ```php
 public function store(Request $request): array|string
 {
@@ -93,7 +98,7 @@ public function store(Request $request): array|string
 ```
 The method `validate()` will return true when there are no errors.
 
-#### When there are errors, we can get them with method `getErrors()`.
+#### When there are errors, we can get them with method `getErrors()`:
 ```php
 $validated = $request->validate([
     'username' => ['required', 'string', 'min:3'],
@@ -111,7 +116,7 @@ These migrations can be found in `database/migrations`.
 The file name must start with the letter m, then you describe the range and action that this migration will perform.
 So your migrations should look like this `m0001_create_first_table` -> `m0002_create_second_table` etc.
 
-#### Create a migration for table users
+#### Create a migration for table users:
 ```php
 class m0001_create_users_table
 {
@@ -132,7 +137,7 @@ class m0001_create_users_table
 }
 ```
 
-#### Start migrating with the PHP command
+#### Start migrating with the PHP command:
 ```bash
 $ php migration
 
@@ -146,7 +151,7 @@ And there we go, all migrations should be applied. If there are any errors, chec
 ### Models
 As soon as we want to create users in the database, we need to create a User model that can do this for us. 
 
-#### Let's create a User model in `app/Models`
+#### Let's create a User model in `app/Models`:
 A created model must extend class Model. Each model should have three methods by default. 
 These are tableName, primaryKey and fillable. The method `fillable()` returns an array of columns which can be filled with data.
 The primary key is by default `id`. Feel free to override it in the model.
@@ -171,11 +176,11 @@ class User extends Model
     }
 }
 ````
-#### Now we can use the model for writing data to the table.
+#### Now we can use the model for writing data to the table:
 In the controller we first want to create an instance of the User model. 
 This instance will represent a user that we want to write to the database.
 
-We can do this by using method `registerColumn()`:
+#### We can do this by using method `registerColumn()`:
 ```php 
 $user = new User();
 $user->registerColumn('username', $request->input('username'));
@@ -183,7 +188,7 @@ $user->registerColumn('username', $request->input('password'));
 $user->save()  
 ```
 
-Or by using the method `registerColumns()`:
+#### Or by using the method `registerColumns()`:
 ```php 
 $user = new User();
 $user->registerColumns([
@@ -192,7 +197,7 @@ $user->registerColumns([
 ]);
 $user->save()
 ```
-#### The helper method `make()` from class `Helpers/Hash` allows us to hash passwords.
+#### The helper method `make()` from class `Helpers/Hash` allows us to hash passwords:
 ```php
 'password' => Hash::make($request->input('password'));
 ```

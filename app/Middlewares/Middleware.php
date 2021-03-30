@@ -5,15 +5,28 @@ namespace App\Middlewares;
 
 
 use App\General\Application;
-use Exception;
+use JetBrains\PhpStorm\Pure;
 
 abstract class Middleware
 {
+    /**
+     * @var array|mixed
+     */
     protected array $actions = [];
 
-    public function __construct($actions = [])
+    /**
+     * @var array
+     */
+    protected array $body;
+
+    /**
+     * Middleware constructor.
+     * @param array $actions
+     */
+    #[Pure] public function __construct($actions = [])
     {
         $this->actions = $actions;
+        $this->body = Application::$app->getRequest()->getBody();
     }
 
     /**
