@@ -7,6 +7,7 @@ namespace App\Controllers;
 use App\General\Application;
 use App\General\Session;
 use App\Middlewares\Middleware;
+use JetBrains\PhpStorm\NoReturn;
 use JetBrains\PhpStorm\Pure;
 
 class Controller
@@ -112,5 +113,15 @@ class Controller
     public function getMiddlewares(): array
     {
         return $this->middlewares;
+    }
+
+    /**
+     * Redirecting to given path.
+     *
+     * @param string $path
+     */
+    #[NoReturn] protected function redirect(string $path): void
+    {
+        $this->app->getResponse()->redirect($path);
     }
 }

@@ -4,6 +4,8 @@
 namespace App\General;
 
 
+use Exception;
+
 class Session
 {
     protected const FLASH_KEY = 'flash_messages';
@@ -22,6 +24,8 @@ class Session
         }
 
         $_SESSION[self::FLASH_KEY] = $flashMessages;
+
+        $this->setCsrf();
     }
 
     /**
@@ -57,12 +61,38 @@ class Session
     }
 
     /**
+     * Set a CSRF token.
+     * @throws Exception
+     */
+    private function setCsrf(): void
+    {
+        try {
+            if (isset($_SESSION['csrf']) === false || $this->isCsrfExpired()) {
+                $_SESSION['csrf'] = bin2hex(random_bytes(32));
+                $_SESSION['csrf-expire'] = time() + 3600;
+            }
+        } catch (Exception $exception) {
+            $this->setCsrf();
+        }
+    }
+
+    /**
+     * Check whether CSRF token is expired.
+     *
+     * @return bool
+     */
+    public function isCsrfExpired(): bool
+    {
+        return $this->get('csrf-expire') <= time();
+    }
+
+    /**
      * Set a flash message.
      *
      * @param string $key
-     * @param string $message
+     * @param array|string $message
      */
-    public function setFlashMessage(string $key, string $message): void
+    public function setFlashMessage(string $key, array|string $message): void
     {
         $_SESSION[self::FLASH_KEY][$key] = [
             'remove' => false,
@@ -85,9 +115,9 @@ class Session
      * Get value of the given flash message key.
      *
      * @param string $key
-     * @return string
+     * @return array|string
      */
-    public function getFlashMessage(string $key): string
+    public function getFlashMessage(string $key): array|string
     {
         return $_SESSION[self::FLASH_KEY][$key]['value'];
     }
@@ -109,7 +139,7 @@ class Session
      */
     public function issetFlashMessages(): bool
     {
-        return empty($_SESSION[self::FLASH_KEY]);
+        return empty($_SESSION[self::FLASH_KEY]) === false;
     }
 
     /**

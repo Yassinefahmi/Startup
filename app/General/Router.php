@@ -66,6 +66,11 @@ class Router
         $method = $this->request->getMethod();
         $callback = $this->routes[$method][$path] ?? false;
 
+        if ($method !== 'get') {
+            $csrf = new CsrfTokenMiddleware();
+            $csrf->handle();
+        }
+
         if ($callback === false) {
             $this->response->setStatus(404);
 

@@ -15,13 +15,13 @@ class Request
      * @var array|string[]
      */
     private array $errorMessages = [
-        'required' => 'This field is required',
-        'string' => 'This field is not a string',
-        'integer' => 'This field is not an integer',
-        'email' => 'This field is not an email',
-        'min' => 'Minimal length of this field must be {min}',
-        'max' => 'Maximal length of this field must be {max}',
-        'confirmed' => 'The given passwords are not matching'
+        'required' => 'This field is required.',
+        'string' => 'This field is not a string.',
+        'integer' => 'This field is not an integer.',
+        'email' => 'This field is not an email.',
+        'min' => 'Minimal length of this field must be {min}.',
+        'max' => 'Maximal length of this field must be {max}.',
+        'confirmed' => 'The given passwords are not matching.'
     ];
     /**
      * @var array
@@ -202,5 +202,12 @@ class Request
     public function getErrorMessages(): array
     {
         return $this->errorMessages;
+    }
+
+    public function __destruct()
+    {
+        if (empty($this->errors) === false) {
+            Application::$app->getSession()->setFlashMessage('validationErrors', $this->errors);
+        }
     }
 }

@@ -107,6 +107,16 @@ class Application
     }
 
     /**
+     * Get the initialized response.
+     *
+     * @return Response
+     */
+    public function getResponse(): Response
+    {
+        return $this->response;
+    }
+
+    /**
      * Get the initialized session.
      *
      * @return Session
