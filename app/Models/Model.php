@@ -5,6 +5,7 @@ namespace App\Models;
 
 
 use App\General\Application;
+use PDO;
 use PDOException;
 use PDOStatement;
 
@@ -102,12 +103,12 @@ abstract class Model
     }
 
     /**
-     * Get a model that meets the given conditions.
+     * Get PDO statement if there is a where condition.
      *
      * @param array $where
-     * @return mixed
+     * @return PDOStatement
      */
-    public static function findOneWhere(array $where): mixed
+    public static function where(array $where): PDOStatement
     {
         $tableName = static::tableName();
         $attributes = array_keys($where);
@@ -123,7 +124,29 @@ abstract class Model
 
         $statement->execute();
 
-        return $statement->fetchObject(static::class);;
+        return $statement;
+    }
+
+    /**
+     * Get a model that meets the given conditions.
+     *
+     * @param array $where
+     * @return mixed
+     */
+    public static function findOneWhere(array $where): mixed
+    {
+        return self::where($where)->fetchObject(static::class);
+    }
+
+    /**
+     * Get all models that meets the given conditions.
+     *
+     * @param array $where
+     * @return array
+     */
+    public static function findAllWhere(array $where): array
+    {
+        return self::where($where)->fetchAll(PDO::FETCH_CLASS, static::class);
     }
 
     /**
