@@ -108,7 +108,7 @@ abstract class Model
      * @param array $where
      * @return PDOStatement
      */
-    public static function where(array $where): PDOStatement
+    private static function where(array $where): PDOStatement
     {
         $tableName = static::tableName();
         $attributes = array_keys($where);
@@ -128,7 +128,7 @@ abstract class Model
     }
 
     /**
-     * Get a model that meets the given conditions.
+     * Get a model that meets the given where conditions.
      *
      * @param array $where
      * @return mixed
@@ -139,7 +139,7 @@ abstract class Model
     }
 
     /**
-     * Get all models that meets the given conditions.
+     * Get all models that meets the given where conditions.
      *
      * @param array $where
      * @return array

@@ -143,6 +143,33 @@ class Session
     }
 
     /**
+     * Show flash messages in html format.
+     *
+     * @return string
+     */
+    public function showFlashMessages(): string
+    {
+        $messages = '';
+
+        foreach ($this->getFlashMessages() as $key => $description) {
+            if ($key === 'validationErrors') {
+                $messages.= '<div class="alert alert-danger"><dl>';
+                foreach ($this->getFlashMessage('validationErrors') as $att => $errors) {
+                    $messages.= '<dt>' . ucfirst($att) . '</dt>';
+                    foreach ($errors as $error) {
+                        $messages.= '<dd>- ' . $error . '</dd>';
+                    }
+                }
+                $messages.= '</dl></div>';
+            } else {
+                $messages.= '<div class="alert alert-' . $key . '">' . $description['value'] . '</div>';
+            }
+        }
+
+        return $messages;
+    }
+
+    /**
      * Session destructor
      */
     public function __destruct()
