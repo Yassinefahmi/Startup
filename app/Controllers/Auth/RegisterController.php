@@ -38,6 +38,16 @@ class RegisterController extends Controller
             $this->redirect('register');
         }
 
+        $unique = User::findOneWhere([
+            'username' => $request->input('username')
+        ]);
+
+        if ($unique !== null) {
+            $this->flashMessage->setFlashMessage('danger', 'This username is already being used.');
+
+            $this->redirect('register');
+        }
+
         $user = new User();
         $user->registerColumns([
             'username' => $request->input('username'),

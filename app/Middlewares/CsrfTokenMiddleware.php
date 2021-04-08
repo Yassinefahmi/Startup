@@ -15,7 +15,6 @@ class CsrfTokenMiddleware extends Middleware
      */
     protected function execute(): mixed
     {
-
         if (isset($this->body['csrf']) === false
             || Application::$app->getSession()->isCsrfExpired()
             || Application::$app->getSession()->get('csrf') !== $this->body['csrf']) {

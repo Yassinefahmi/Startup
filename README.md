@@ -1,6 +1,17 @@
 # Startup Framework
 The starters framework for your MVC application.
 
+#### Requirements:
+- PHP >= 8.0.3
+- BCMath PHP Extension
+- JSON PHP Extension
+- Mbstring PHP Extension
+- OpenSSL PHP Extension
+- PDO PHP Extension
+- Composer >= 2.0.11
+
+## Getting started
+
 ### Configure the router
 
 The web router can be found in `routes/web.php`. You can currently only define a `get` and `post` route. 
@@ -67,6 +78,28 @@ echo $foo . ' ' . $params[1];
 The views can be found in directory `views`. This directory has by default a `layouts/main.php` layout.
 You can create a new default layout or rename the current one. The default layout holds the `{{ content }}` placeholder. 
 This placeholder will automatically be replaced with the given view in the controller.
+
+If you're using a form, don't forget to include the csrf token.
+
+#### For example, if we have a register view:
+```html
+<form method="post" action="">
+    <input type="hidden" name="csrf" value="<?= $_SESSION['csrf'] ?>">
+    <div class="mb-3">
+        <label class="form-label">Username</label>
+        <input type="text" name="username" class="form-control">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Password</label>
+        <input type="password" name="password" class="form-control">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Confirm Password</label>
+        <input type="password" name="password_confirmation" class="form-control">
+    </div>
+    <button type="submit" class="btn btn-primary">Register</button>
+</form> 
+```
 
 ### Validation
 The request also provides a validation process. The validate method accepts an array of attributes and rules. 
@@ -227,7 +260,7 @@ if (Hash::verify($request->input('password'), $user->getAttributeValue('password
     return $this->view('auth/login');
 } 
 ```
-With the method `authenticatedUser()` we can tell the application to authenticate the given user.
+With the method `authenticateUser()` we can tell the application to authenticate the given user.
 ```php
 $this->app->authenticateUser($user); 
 ```
