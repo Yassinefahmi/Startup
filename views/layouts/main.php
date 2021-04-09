@@ -18,17 +18,20 @@
             <ul class="navbar-nav">
                 <?php if (\App\General\Application::isAuthenticated()): ?>
                     <li class="nav-item">
-                        <a class="nav-link <?= \App\Helpers\Route::getCurrentPath() === '/home' ? 'active' : '' ?>" aria-current="page" href="/home">Home</a>
+                        <a class="nav-link <?= \App\Helpers\Route::getCurrentPath() === '/home' ? 'active' : '' ?>"
+                           href="<?= \App\Helpers\Route::name('home') ?>">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Logout</a>
                     </li>
                 <?php else: ?>
                     <li class="nav-item">
-                        <a class="nav-link <?= \App\Helpers\Route::getCurrentPath() === '/login' ? 'active' : '' ?>" href="/login">Login</a>
+                        <a class="nav-link <?= \App\Helpers\Route::getCurrentPath() === '/login' ? 'active' : '' ?>"
+                           href="<?= \App\Helpers\Route::name('login.index') ?>">Login</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link <?= \App\Helpers\Route::getCurrentPath() === '/register' ? 'active' : '' ?>" href="/register">Register</a>
+                        <a class="nav-link <?= \App\Helpers\Route::getCurrentPath() === '/register' ? 'active' : '' ?>"
+                           href="<?= \App\Helpers\Route::name('register.index') ?>">Register</a>
                     </li>
                 <?php endif; ?>
             </ul>
