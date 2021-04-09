@@ -6,6 +6,7 @@ namespace App\General;
 
 use App\Exceptions\NotFoundException;
 use App\Middlewares\CsrfTokenMiddleware;
+use Closure;
 
 class Router
 {
@@ -36,23 +37,25 @@ class Router
     /**
      * Register a GET route.
      *
-     * @param $path
-     * @param $callback
+     * @param string $path
+     * @param string|array|Closure $callback
+     * @param string|null $name
      */
-    public function get($path, $callback): void
+    public function get(string $path, string|array|Closure $callback, string $name = null): void
     {
-        $this->routes['get'][$path] = $callback;
+        $this->routes['get'][$path][$name] = $callback;
     }
 
     /**
      * Register a POST route.
      *
-     * @param $path
-     * @param $callback
+     * @param string $path
+     * @param string|array|Closure $callback
+     * @param string|null $name
      */
-    public function post($path, $callback): void
+    public function post(string $path, string|array|Closure $callback, string $name = null): void
     {
-        $this->routes['post'][$path] = $callback;
+        $this->routes['post'][$path][$name] = $callback;
     }
 
     /**
@@ -71,6 +74,26 @@ class Router
     }
 
     /**
+     * Get URI of given route name.
+     *
+     * @param string $name
+     * @return int|string|null
+     * @throws NotFoundException
+     */
+    public function formatURI(string $name): int|string|null
+    {
+        foreach ($this->routes as $method => $routes) {
+            foreach ($routes as $path => $routeName) {
+                if (key($routeName) === $name) {
+                    return $path;
+                }
+            }
+        }
+
+        return throw new NotFoundException();
+    }
+
+    /**
      * Render functionalities if route does or not exist.
      *
      * @return mixed
@@ -78,9 +101,11 @@ class Router
      */
     public function resolve(): mixed
     {
-        $path = $this->request->getPath();
         $method = $this->request->getMethod();
-        $callback = $this->routes[$method][$path] ?? false;
+        $path = $this->request->getPath();
+
+        $name = $this->routes[$method][$path] ?? false;
+        $callback = $name ? current($name) : false;
 
         if ($method !== 'get') {
             $csrf = new CsrfTokenMiddleware();
