@@ -38,6 +38,27 @@ This can also be done for `post`.
 $app->getRouter()->post('/example', [\App\Controllers\ExampleController::class, 'store']);
 ```
 
+#### Each router can have their own name:
+```php
+$app->getRouter()->get('/example', [\App\Controllers\ExampleController::class, 'index'], 'example.index');
+$app->getRouter()->post('/example', [\App\Controllers\ExampleController::class, 'store'], 'example.store');
+```
+
+We can now easily generate the URI by passing a route name.
+```php
+use App\Helpers\Route;
+
+$getExampleURI = Route::name('example.index');
+// GET http://example.com/example
+$postExampleURI = Route::name('example.store');
+// POST http://example.com/example 
+```
+
+#### The router can also be used for redirection:
+```php
+$app->getRouter()->redirect('/foo', '/bar'); 
+```
+
 ### Create a controller
 The controllers can be found in directory `app/Controllers`. The authentication controllers are included as default 
 and can be adjusted anytime. The controllers should always extend class `app/General/Controller.php`.
