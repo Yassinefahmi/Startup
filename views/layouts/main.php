@@ -29,10 +29,6 @@
                         <a class="nav-link <?= \App\Helpers\Route::getCurrentPath() === '/login' ? 'active' : '' ?>"
                            href="<?= \App\Helpers\Route::name('login.index') ?>">Login</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link <?= \App\Helpers\Route::getCurrentPath() === '/register' ? 'active' : '' ?>"
-                           href="<?= \App\Helpers\Route::name('register.index') ?>">Register</a>
-                    </li>
                 <?php endif; ?>
             </ul>
         </div>

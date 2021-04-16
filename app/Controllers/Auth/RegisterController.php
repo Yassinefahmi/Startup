@@ -13,15 +13,6 @@ use JetBrains\PhpStorm\NoReturn;
 
 class RegisterController extends Controller
 {
-    public function index(): array|string
-    {
-        if (Application::isAuthenticated()) {
-            $this->redirect('home');
-        }
-
-        return $this->view('auth/register');
-    }
-
     /**
      * Creates a user.
      *
@@ -35,7 +26,7 @@ class RegisterController extends Controller
         ]);
 
         if ($validated === false) {
-            $this->redirect('register');
+            $this->redirect('login');
         }
 
         $unique = User::findOneWhere([
@@ -45,7 +36,7 @@ class RegisterController extends Controller
         if ($unique !== null) {
             $this->flashMessage->setFlashMessage('danger', 'This username is already being used.');
 
-            $this->redirect('register');
+            $this->redirect('login');
         }
 
         $user = new User();
@@ -57,6 +48,6 @@ class RegisterController extends Controller
 
         $this->flashMessage->setFlashMessage('success', 'The user has successfully been registered.');
 
-        $this->redirect('register');
+        $this->redirect('login');
     }
 }

@@ -85,7 +85,8 @@ class Router
         foreach ($this->routes as $method => $routes) {
             foreach ($routes as $path => $routeName) {
                 if (key($routeName) === $name) {
-                    return $path;
+                    $environment = new Environment();
+                    return $environment->getApplicationVariables()['APP_URL'] . $path;
                 }
             }
         }

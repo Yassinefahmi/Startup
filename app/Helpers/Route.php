@@ -31,7 +31,7 @@ class Route
         try {
             return Application::$app->getRouter()->formatURI($name);
         } catch (NotFoundException $e) {
-            return null;
+            return $e->getMessage();
         }
     }
 }
