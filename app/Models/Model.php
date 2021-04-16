@@ -150,6 +150,21 @@ abstract class Model
     }
 
     /**
+     * Get all models.
+     *
+     * @return array
+     */
+    public static function all(): array
+    {
+        $tableName = static::tableName();
+
+        $statement = self::prepare("SELECT * FROM $tableName");
+        $statement->execute();
+
+        return $statement->fetchAll(PDO::FETCH_CLASS, static::class);
+    }
+
+    /**
      * Prepare a sql query.
      *
      * @param string $sql

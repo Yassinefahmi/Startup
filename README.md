@@ -193,7 +193,7 @@ class m0001_create_users_table
 
 #### Start migrating with the PHP command:
 ```bash
-$ php migration
+$ php migration.php
 
 [08-03-2021 21:13:57] - Applying migration m0001_create_users_table.php
 [08-03-2021 21:13:57] - Applied migration m0001_create_users_table.php
@@ -251,6 +251,38 @@ $user->registerColumns([
 ]);
 $user->save()
 ```
+
+To make your life as a developer easier, I have a number of methods that can help you to retrieve desired models.
+
+```php
+// Get all users:
+$users = User::all();
+
+foreach ($users as $user) {
+    var_dump($user);
+}
+```
+```php
+// Get all users that are female by gender:
+$users = User::findAllWhere([
+    'gender' => 'female'
+]);
+
+foreach ($users as $user) {
+    var_dump($user);
+}
+```
+```php
+// Get user that has the username Yassine:
+$users = User::findOneWhere([
+    'username' => 'Yassine'
+]);
+
+foreach ($users as $user) {
+    var_dump($user);
+}
+```
+
 #### The helper method `make()` from class `Helpers/Hash` allows us to hash passwords:
 ```php
 'password' => Hash::make($request->input('password'));
