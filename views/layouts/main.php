@@ -22,7 +22,7 @@
                            href="<?= \App\Helpers\Route::name('home') ?>">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Logout</a>
+                        <a class="nav-link" href="<?= \App\Helpers\Route::name('logout') ?>">Logout</a>
                     </li>
                 <?php else: ?>
                     <li class="nav-item">

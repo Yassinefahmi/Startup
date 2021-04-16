@@ -8,11 +8,21 @@ use App\Controllers\Controller;
 use App\General\Application;
 use App\General\Request;
 use App\Helpers\Hash;
+use App\Middlewares\AuthMiddleware;
 use App\Models\User;
 use JetBrains\PhpStorm\NoReturn;
 
 class LoginController extends Controller
 {
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->registerMiddleware(new AuthMiddleware([
+            'logout'
+        ]));
+    }
+
     public function index(): array|string
     {
         if (Application::isAuthenticated()) {
@@ -52,5 +62,13 @@ class LoginController extends Controller
         $this->app->authenticateUser($user);
 
         $this->redirect('home');
+    }
+
+    #[NoReturn] public function logout(): void
+    {
+        Application::$app->logoutUser();
+
+        var_dump('sd');
+        $this->redirect('login');
     }
 }
